@@ -1,0 +1,47 @@
+create database new_e_Commerce
+use new_e_Commerce
+
+
+create table Products( id int primary key, name nvarchar(20), price int, Rating int, quantity int )
+create table Customer(c_id int primary key, C_name nvarchar(20), phone_no numeric(20,0), email nvarchar(20), address nvarchar(20))
+create table Orderss(o_id int primary key,p_id int ,constraint fk_prod_p_id foreign key(p_id) references Products(id), cust_name nvarchar(20), order_status nvarchar(20), mode nvarchar(10) , discount_Rs int )
+
+
+
+insert into Products values( 1, 'Table', 599, 4.5,10)
+insert into Products values( 2, 'Chair', 599, 4 ,15)
+insert into Products values( 3, 'Mobile', 11999, 4.7, 30)
+insert into Products values( 4, 'Mask', 290, 4.3,18)
+insert into Products values( 5, 'Shoes', 1999, 4.3,15)
+insert into Products values( 6, 'Watch', 1999, 5,30)
+
+insert into Customer values ( 101, 'Mansi', 9873537394,'mansi@gmail.com','Aligarh')
+insert into Customer values ( 102, 'Shweta',8434998218,'shweta@gmail.com', 'Lucknow')
+insert into Customer values ( 103, 'Arjit', 9631687787,'arjit@gmail.com', 'Gurugram')
+insert into Customer values ( 104, 'Shivam',7143564867,'shivam@gmail.com', 'Agra')
+insert into Customer values ( 105, 'Riya',  8145356867,'riya@gmail.com', 'Bhopal')
+insert into Customer values ( 106, 'Ankita',9313564867,'ankita@gmail.com', 'Aligarh')
+
+
+insert into Orderss values( 201,0,'Mansi','Confirm', 'COD',20)
+insert into Orderss values( 202,0,'Arjit' ,'in cart', 'Pending', 10)
+insert into Orderss values( 203,0,'Shivam','confirm', 'Gpay',1000)
+insert into Orderss values( 204,0,'Mansi','pending', 'Fail',399)
+insert into Orderss values( 205,0,'Shweta','confirm', 'Gpay',309)
+insert into Orderss values( 206,0,'Mansi','confirm', 'BHIM',589)
+
+
+--Group by and having clause
+select avg(discount_Rs), cust_name from Orderss group by cust_name
+select avg(discount_Rs), cust_name from Orderss group by cust_name having avg(discount_Rs)>300
+select max(discount_Rs), cust_name from Orderss group by cust_name
+select sum(discount_Rs), cust_name from Orderss group by cust_name
+select count(discount_Rs), cust_name from Orderss group by cust_name
+
+
+select sum(price),sum(quantity), name from Products group by name having sum(price)>500
+
+Select * from Products order by Rating
+Select * from Products order by Rating desc
+Select * from Products order by len(name)
+
