@@ -28,24 +28,16 @@ insert into Endorsement values(6,8)
 
 
 
---Celebrities not Endorsing any of the Brand
-
-create procedure sp_no_Edorsement
-as
-begin
-select c.C_name from Endorsement as e
-right join Celebrities as c
-on e.c_id=c.c_id
-where e.c_id is null
-end
-exec sp_no_Edorsement
 
 
---(i)Brand not endorsed by any of the Celebrity from the table
+--(i)Brand not endorsed by any of the Celebrity from the table:
 create procedure sp_not_Endorsed_Celebrity
 as
 begin
-select c.c_id,c.c_name from Endorsement as e right join Celebrities as c on c.c_id=e.c_id where e.c_id is null
+select c.c_id,c.c_name from Endorsement as e
+right join Celebrities as c 
+on c.c_id=e.c_id
+where e.c_id is null
 end
 
 exec sp_not_Endorsed_Celebrity
@@ -56,10 +48,27 @@ exec sp_not_Endorsed_Celebrity
 create procedure sp_Common_Brands
 as
 begin
-select e.b_id,b.b_name,count(*) as Endorsement_by from Endorsement as e full join Brands as b on b.b_id=e.b_id group by e.b_id,b_name having count(*) > 1
+select e.b_id,b.b_name,count(*) as Endorsement_by from Endorsement as e 
+full join Brands as b 
+on b.b_id=e.b_id group by e.b_id,b_name
+having count(*) > 1
 end
 
 exec sp_Common_Brands
 
+
+--iii)Celebrities endorsing in different different brands:
+
+create procedure sp_common_Celebrities
+as
+begin
+select c.c_name from Endorsments as e
+inner join Celebrities as c
+on e.c_id=c.c_id 
+group by c.c_name
+having count(c.c_name)>1
+end
+
+exec sp_common_Celebrities
 
 
