@@ -1,0 +1,65 @@
+create database fashion_brands
+use fashion_brands
+
+--another way to insert values:
+create table Brands(b_id int primary key identity, B_name nvarchar(20), constraint fk_Brands_b_id foreign key (b_id) references Brands(b_id) )
+insert into Brands(B_name) values('Kay Beauty'),('HRX'),('Anomaly'),('Puma'),('Being Human'),('Lux'),('Wrogn'),('Vimal'),('All About You')
+
+
+create table Celebrities(c_id int Primary Key identity, C_name nvarchar(20),constraint fk_Brands_c_id foreign key (c_id) references Celebrities(c_id))
+insert into Celebrities(C_name) values('Katrina'),('Hritik'),('Priyanka'),('Tiger'),('Salman'),('ShahRukh'),('Virat'),('ShahRukh'),('Dipika')
+
+
+create table Endorsement(e_id int Primary Key identity, c_id int, b_id int )
+
+
+select * from Celebrities
+select * from Brands
+
+insert into Endorsement values(3,7)
+insert into Endorsement values(1,4)
+insert into Endorsement values(8,1)
+insert into Endorsement values(2,9)
+insert into Endorsement values(6,2)
+insert into Endorsement values(3,3)
+insert into Endorsement values(9,5)
+insert into Endorsement values(5,6)
+insert into Endorsement values(6,8)
+
+
+
+--Celebrities not Endorsing any of the Brand
+
+create procedure sp_no_Edorsement
+as
+begin
+select c.C_name from Endorsement as e
+right join Celebrities as c
+on e.c_id=c.c_id
+where e.c_id is null
+end
+exec sp_no_Edorsement
+
+
+--(i)Brand not endorsed by any of the Celebrity from the table
+create procedure sp_not_Endorsed_Celebrity
+as
+begin
+select c.c_id,c.c_name from Endorsement as e right join Celebrities as c on c.c_id=e.c_id where e.c_id is null
+end
+
+exec sp_not_Endorsed_Celebrity
+
+
+--(ii)Common Brands endoced by Celebrity:
+--using Aggregate function and clause and join
+create procedure sp_Common_Brands
+as
+begin
+select e.b_id,b.b_name,count(*) as Endorsement_by from Endorsement as e full join Brands as b on b.b_id=e.b_id group by e.b_id,b_name having count(*) > 1
+end
+
+exec sp_Common_Brands
+
+
+
