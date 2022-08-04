@@ -1,0 +1,161 @@
+create database fashion_brands
+use fashion_brands
+
+--another way to insert values:
+create table Brands(b_id int primary key identity, B_name nvarchar(20), constraint fk_Brands_b_id foreign key (b_id) references Brands(b_id) )
+insert into Brands(B_name) values('Kay Beauty'),('HRX'),('Anomaly'),('Puma'),('Being Human'),('Lux'),('Wrogn'),('Vimal'),('All About You')
+
+drop table Brands 
+
+create table Celebrities(c_id int Primary Key identity, C_name nvarchar(20),constraint fk_Brands_c_id foreign key (c_id) references Celebrities(c_id))
+insert into Celebrities(C_name) values('Katrina'),('Hritik'),('Priyanka'),('Tiger'),('Salman'),('ShahRukh'),('Virat'),('ShahRukh'),('Dipika')
+
+
+create table Endorsement(e_id int Primary Key identity, c_id int, b_id int )
+
+
+select * from Celebrities
+select * from Brands
+
+insert into Endorsement values(3,7)
+insert into Endorsement values(1,4)
+insert into Endorsement values(8,1)
+insert into Endorsement values(2,9)
+insert into Endorsement values(6,2)
+insert into Endorsement values(3,3)
+insert into Endorsement values(9,5)
+insert into Endorsement values(5,6)
+insert into Endorsement values(6,8)
+
+
+create table celebrity_log(c_id int, opration nvarchar(10), updatedate datetime)
+create table brand_log(b_id int, opration nvarchar(10), updatedate datetime)
+create table endorse_log(e_id int, opration nvarchar(10), updatedate datetime)
+
+select * from celebrity_log
+select * from brand_log
+select * from endorse_log
+
+
+--For Celebrities
+--(i)insert
+create trigger CelebrityInsertTrigger
+on Celebrities
+for insert
+as
+insert into celebrity_log(c_id,opration, updatedate)
+select c_id, 'Data Inserted',GETDATE() from inserted
+
+insert into Celebrities values('Aish')
+select * from celebrity_log
+
+
+
+
+--ii)update
+create trigger CelebrityupdateTrigger
+on celebrity_log
+for update
+as
+insert into celebrity_log(c_id,opration, updatedate)
+select c_id, 'Data Inserted',GETDATE() from deleted
+
+update  Celebrities set C_name ='Aish' where c_id=10
+select * from celebrity_log
+
+
+
+--iii)delete
+create trigger CelebrityDeleteTrigger
+on Celebrities
+after delete
+as
+insert into celebrity_log(c_id, operation, updateddate)
+select c_id,'Data Deleted',GETDATE() from deleted
+
+delete from Celebrities where c_id=10
+select * from celebrity_log 
+
+
+
+
+--For Brands
+--(i)insert
+create trigger BrandsInsertTrigger
+on Brands
+for insert
+as
+insert into brand_log(b_id,opration, updatedate)
+select b_id, 'Data Inserted',GETDATE() from inserted
+
+insert into Brands values('Titan')
+select * from brand_log
+
+
+--ii)update
+create trigger BrandupdateTrigger
+on brand_log
+for update
+as
+insert into celebrity_log(b_id,opration, updatedate)
+select b_id, 'Data Inserted',GETDATE() from inserted
+
+update  Celebrities set B_name ='Rollex' where b_id=10
+select * from brand_log
+
+
+--iii)delete
+create trigger BrandDeleteTrigger
+on Brands
+after delete
+as
+insert into celebrity_log(b_id,operation,updateddate)
+select b_id,'Data Deleted',GETDATE() from deleted
+
+delete from Brands where b_id=11
+select * from brand_log 
+
+
+
+
+
+
+--For Endorsement 
+--(i)insert
+create trigger EndorseInsertTrigger
+on endorse_log
+for insert
+as
+insert into endorse_log(e_id,opration, updatedate)
+select e_id, 'Data Inserted',GETDATE() from inserted
+
+insert into endorsments values(9,8)
+
+
+--ii)update
+create trigger EndorseupdateTrigger
+on endorse_log
+for update
+as
+insert into endorse_log(e_id,opration, updatedate)
+select e_id, 'Data Inserted',GETDATE() from deleted
+
+update  Endorsement set e_id ='3' where c_id = '7'
+select * from brand_log
+
+--iii)delete
+create trigger EndorseDeleteTrigger
+on Endorsement
+after delete
+as
+insert into endorse_log(e_id,operation,updateddate)
+select e_id,'Data Deleted',GETDATE() from deleted
+
+delete from Endorsement where e_id=10
+select * from endorse_log 
+
+
+
+
+
+ 
